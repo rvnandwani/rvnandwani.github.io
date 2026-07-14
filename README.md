@@ -1,52 +1,63 @@
-<a href="https://themes.3rdwavemedia.com/bootstrap-templates/resume/free-bootstrap-theme-for-web-developers/" target="_blank"><img src="https://themes.3rdwavemedia.com/wp-content/uploads/2018/07/free-bootstrap-portfolio-theme-for-web-developers.jpg" alt="Developer Theme" width="750" /></a>
+# Raghav Nandwani — Portfolio Website
 
-## Theme Details & Demo
+Premium personal portfolio for **Raghav Nandwani**, Core AI Technology Lead — positioning as a builder of complete intelligent systems across LLMs, agents, perception, and robotics.
 
-**Demo:** https://themes.3rdwavemedia.com/bootstrap-templates/resume/free-bootstrap-theme-for-web-developers/
+## Stack
 
-Developer is a free Bootstrap 4 theme designed to **help developers promote their work**. 
-It can be used as a **professional portal** to your other online portfolios or websites (eg. Linkedin, CoderWall, Blog, GitHub etc) **in a modular fashion**. 
-The template comes with all of the **source SCSS files included** so the styling/colour can easily be customised to your taste.
+- HTML5 · CSS3 · Vanilla JavaScript
+- No build step, backend, or dependencies
+- Compatible with [GitHub Pages](https://pages.github.com/)
 
-## Author & License
+## Structure
 
-This Bootstrap template is made by UX/UI designer [Xiaoying Riley](https://twitter.com/3rdwave_themes) for developers and is 100% FREE as long as you **keep the footer attribution link**. You do not have the rights to resell, sublicense or redistribute (even for free) the template on its own or as a separate attachment from any of your work.
+```
+├── index.html
+├── style.css
+├── script.js
+├── favicon.png
+├── images/
+│   ├── profile/
+│   │   ├── profile.png
+│   │   └── about_photo.png
+│   ├── projects/
+│   ├── testimonials/
+│   └── logos/
+│       └── icon.png
+├── resume/
+│   └── Raghav_Nandwani_ResumeAI.pdf
+├── assets/          # original source assets
+├── agent.md
+└── README.md
+```
 
-If you'd like to **use the template without the footer attribution link**, you can [buy the **commercial license** via the theme website](https://themes.3rdwavemedia.com/bootstrap-templates/resume/free-bootstrap-theme-for-web-developers/)
+## Local preview
 
-#### Follow Xiaoying
+Open `index.html` in a browser, or serve the folder:
 
-[Twitter](https://twitter.com/3rdwave_themes)
+```bash
+python3 -m http.server 8080
+```
 
-[Facebook](https://www.facebook.com/3rdwavethemes/)
+Then visit `http://localhost:8080`.
 
-[Dribbble](https://dribbble.com/Xiaoying)
+## Content
 
-[Medium](https://medium.com/@3rdwave_themes)
+All resume-derived content (experience, education, skills, certifications, testimonials, contact) is defined as data objects in `script.js` and rendered at runtime. Update those objects to change site copy without editing HTML structure.
 
-[Linkedin](https://uk.linkedin.com/in/xiaoying)
+## Sections
 
+1. Hero  
+2. About (+ Beyond Technology)  
+3. Skills (filterable categories)  
+4. Professional Experience (modal details)  
+5. Education (modal details)  
+6. Certifications  
+7. Testimonials  
+8. Resume download  
+9. Contact  
 
-## Latest Version
-**v2.2** - 16 Oct 2019
+## Deploy to GitHub Pages
 
-[Changelog](https://themes.3rdwavemedia.com/bootstrap-templates/resume/free-bootstrap-theme-for-web-developers/?target=changelog)
-
-
-## Features
-
--  Fully Responsive
--  HTML5 + CSS3
--  Built on Bootstrap 4
--  **SCSS** source files included
--  1000+ FontAwesome 5 icons
-
-
-## Credits
-- [Bootstrap](http://getbootstrap.com/)
-- [FontAwesome](http://fortawesome.github.io/Font-Awesome/)
-- [jQuery](http://jquery.com/)
-- [GitHub Activity Stream](http://caseyscarborough.com/projects/github-activity/)
-- [GitHub Calendar Plugin](https://github.com/IonicaBizau/github-calendar)
-- [jQuery RSS](https://github.com/sdepold/jquery-rss)
-- Profile image: [Ben Smith](https://www.flickr.com/photos/dotbenjamin/2577394151)
+1. Push this repository to GitHub.  
+2. Settings → Pages → Deploy from branch `main` (root).  
+3. Site will be available at `https://<username>.github.io/<repo>/`.
