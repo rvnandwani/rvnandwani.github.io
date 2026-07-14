@@ -35,6 +35,7 @@ Guidance for future agents editing this static GitHub Pages portfolio.
 - Escape and backdrop click close modals; restore focus to the opener.
 - Mobile: stacked layouts; modals go full-screen under 768px.
 - Certifications open `credential_url` in a new tab.
+- **Critical:** `.modal-backdrop` must remain non-interactive when closed (`[hidden] { display: none !important }` plus `pointer-events: none` unless `.is-open`). Author `display: grid` alone will override `[hidden]` in some browsers and create an invisible full-page click trap.
 
 ## When updating content
 

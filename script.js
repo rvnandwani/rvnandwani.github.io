@@ -402,6 +402,7 @@ const ICONS = {
   email: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>`,
   linkedin: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zm-9.5 15v-7H7v7h2.5zM8.25 9.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM18 18v-4.25c0-2.2-1.2-3.25-2.8-3.25-1.3 0-1.9.7-2.2 1.2V11H10.5c.0 1.35 0 7 0 7H13v-3.9c0-.2 0-.4.05-.55.15-.4.5-.85 1.1-.85.8 0 1.1.6 1.1 1.5V18H18z"/></svg>`,
   github: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0 1 12 6.8c.85 0 1.7.12 2.5.34 1.9-1.32 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.59.69.48A10.03 10.03 0 0 0 22 12.26C22 6.58 17.52 2 12 2z"/></svg>`,
+  youtube: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.5 31.5 0 0 0 24 12a31.5 31.5 0 0 0-.5-5.8zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/></svg>`,
   external: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg>`,
   close: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.3 5.71 12 12.01l-6.3-6.3-1.4 1.42 6.29 6.29-6.3 6.3 1.42 1.4 6.29-6.28 6.3 6.3 1.4-1.42-6.28-6.3 6.3-6.29z"/></svg>`,
   download: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 16 7 11l1.4-1.4 2.6 2.55V4h2v8.15l2.6-2.55L17 11l-5 5zm-7 2h14v2H5v-2z"/></svg>`,
@@ -418,6 +419,14 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function escapeAttr(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;");
 }
 
 function socialLinksHtml(className = "social-links") {
@@ -477,23 +486,25 @@ function renderSkills() {
   filtersEl.innerHTML = categories
     .map(
       (cat, i) => `
-      <button type="button" class="skill-filter${i === 0 ? " is-active" : ""}" data-category="${escapeHtml(cat)}" aria-pressed="${i === 0}">
+      <button type="button" class="skill-filter${i === 0 ? " is-active" : ""}" data-index="${i}" aria-pressed="${i === 0}">
         ${escapeHtml(cat)}
       </button>
     `
     )
     .join("");
 
-  function paint(activeCategory) {
+  function paint(activeIndex) {
+    const activeCategory = categories[activeIndex] || "All";
     const groups =
       activeCategory === "All"
         ? SKILLS
         : SKILLS.filter((g) => g.category === activeCategory);
 
+    gridEl.classList.add("is-filtering");
     gridEl.innerHTML = groups
       .map(
         (group) => `
-        <div class="skill-group reveal" data-category="${escapeHtml(group.category)}">
+        <div class="skill-group reveal is-visible" data-category="${escapeAttr(group.category)}">
           <h3 class="skill-group-title">${escapeHtml(group.category)}</h3>
           <div class="skill-cards">
             ${group.items
@@ -512,21 +523,24 @@ function renderSkills() {
       )
       .join("");
 
-    observeReveals();
+    requestAnimationFrame(() => {
+      gridEl.classList.remove("is-filtering");
+    });
   }
 
-  paint("All");
+  paint(0);
 
   filtersEl.addEventListener("click", (e) => {
     const btn = e.target.closest(".skill-filter");
     if (!btn) return;
+    const index = Number(btn.dataset.index);
     filtersEl.querySelectorAll(".skill-filter").forEach((b) => {
       b.classList.remove("is-active");
       b.setAttribute("aria-pressed", "false");
     });
     btn.classList.add("is-active");
     btn.setAttribute("aria-pressed", "true");
-    paint(btn.dataset.category);
+    paint(index);
   });
 }
 
@@ -602,10 +616,10 @@ function renderCertifications() {
     (cert) => `
     <a
       class="cert-card reveal"
-      href="${escapeHtml(cert.credential_url)}"
+      href="${escapeAttr(cert.credential_url)}"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="${escapeHtml(cert.name)} — open credential"
+      aria-label="${escapeAttr(cert.name)} — open credential"
     >
       <div>
         <h3>${escapeHtml(cert.name)}</h3>
@@ -620,7 +634,7 @@ function renderCertifications() {
   ).join("");
 
   if (moreEl) {
-    moreEl.innerHTML = `More on <a href="${CONTACT.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn profile</a>`;
+    moreEl.innerHTML = `More on <a href="${escapeAttr(CONTACT.linkedin)}" target="_blank" rel="noopener noreferrer">LinkedIn profile</a>`;
   }
 }
 
@@ -636,8 +650,9 @@ function renderTestimonials() {
         <p>“${escapeHtml(t.highlight)}”</p>
       </blockquote>
       <footer>
-        <a class="testimonial-name" href="${escapeHtml(t.linkedin)}" target="_blank" rel="noopener noreferrer">
+        <a class="testimonial-name" href="${escapeAttr(t.linkedin)}" target="_blank" rel="noopener noreferrer">
           ${escapeHtml(t.name)}
+          <span class="testimonial-linkedin" aria-hidden="true">${ICONS.linkedin}</span>
           <span class="sr-only">(LinkedIn)</span>
         </a>
         <p class="testimonial-meta">${escapeHtml(t.designation)}, ${escapeHtml(t.company)}</p>
@@ -647,7 +662,7 @@ function renderTestimonials() {
   ).join("");
 
   if (moreEl) {
-    moreEl.innerHTML = `More on <a href="${CONTACT.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn profile</a>`;
+    moreEl.innerHTML = `More on <a href="${escapeAttr(CONTACT.linkedin)}" target="_blank" rel="noopener noreferrer">LinkedIn profile</a>`;
   }
 }
 
@@ -700,6 +715,7 @@ function openModal(title, bodyHtml) {
   titleEl.textContent = title;
   body.innerHTML = bodyHtml;
   backdrop.hidden = false;
+  backdrop.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
 
   requestAnimationFrame(() => {
@@ -707,7 +723,7 @@ function openModal(title, bodyHtml) {
     modal.classList.add("is-open");
   });
 
-  closeBtn.focus();
+  if (closeBtn) closeBtn.focus();
 }
 
 function closeModal() {
@@ -724,6 +740,7 @@ function closeModal() {
     if (finished) return;
     finished = true;
     backdrop.hidden = true;
+    backdrop.setAttribute("aria-hidden", "true");
     delete backdrop.dataset.closing;
     body.innerHTML = "";
     document.body.classList.remove("modal-open");
@@ -745,20 +762,27 @@ function openExperienceModal(job) {
     job.media && job.media.length
       ? `
       <section class="modal-block">
-        <h4>LinkedIn Posts & Media</h4>
+        <h4>LinkedIn Posts &amp; Media</h4>
         <ul class="modal-links">
           ${job.media
-            .map(
-              (m) => `
+            .map((m) => {
+              const type = String(m.type || "link").toLowerCase();
+              const icon =
+                type === "youtube"
+                  ? ICONS.youtube
+                  : type === "linkedin"
+                    ? ICONS.linkedin
+                    : ICONS.external;
+              return `
             <li>
-              <a href="${escapeHtml(m.url)}" target="_blank" rel="noopener noreferrer">
-                <span class="media-type">${escapeHtml(m.type)}</span>
+              <a href="${escapeAttr(m.url)}" target="_blank" rel="noopener noreferrer">
+                <span class="media-type">${escapeHtml(type)}</span>
                 ${escapeHtml(m.title)}
-                ${ICONS.external}
+                <span class="media-icon" aria-hidden="true">${icon}</span>
               </a>
             </li>
-          `
-            )
+          `;
+            })
             .join("")}
         </ul>
       </section>
@@ -826,7 +850,7 @@ function openEducationModal(edu) {
             .map(
               ([name, url]) => `
             <li>
-              <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+              <a href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">
                 ${escapeHtml(name)}
                 ${ICONS.external}
               </a>
@@ -885,21 +909,39 @@ function initNav() {
   const menu = document.getElementById("nav-menu");
   const header = document.getElementById("site-header");
 
+  const closeMobileNav = () => {
+    if (!menu || !toggle) return;
+    menu.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("nav-open");
+  };
+
   if (toggle && menu) {
     toggle.addEventListener("click", () => {
       const open = menu.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(open));
       document.body.classList.toggle("nav-open", open);
     });
-
-    menu.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        menu.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-        document.body.classList.remove("nav-open");
-      });
-    });
   }
+
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const href = link.getAttribute("href");
+    if (!href || href === "#") return;
+
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    e.preventDefault();
+    closeMobileNav();
+
+    const headerOffset = header ? header.offsetHeight + 8 : 0;
+    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top, behavior: "smooth" });
+    history.pushState(null, "", href);
+  });
 
   const onScroll = () => {
     if (!header) return;
@@ -938,7 +980,7 @@ function initYear() {
 /* Boot                                                                        */
 /* -------------------------------------------------------------------------- */
 
-document.addEventListener("DOMContentLoaded", () => {
+function init() {
   renderAbout();
   renderSkills();
   renderExperience();
@@ -950,4 +992,17 @@ document.addEventListener("DOMContentLoaded", () => {
   initNav();
   initYear();
   observeReveals();
-});
+
+  const backdrop = document.getElementById("modal-backdrop");
+  if (backdrop) {
+    backdrop.setAttribute("aria-hidden", "true");
+    backdrop.hidden = true;
+    backdrop.classList.remove("is-open");
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
